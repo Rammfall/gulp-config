@@ -1,0 +1,42 @@
+.example {
+	font-family: Arial,sans-serif;
+	font-weight: 700;
+	background-image: linear-gradient(270deg,#000,#fff);
+	color: red;
+	-webkit-transform: matrix();
+	transform: matrix();
+}
+
+body {
+	font-family: Arial,sans-serif;
+	font-weight: 700;
+	color: red;
+	resize: both;
+}
+
+.some {
+	color: #00f;
+}
+
+@media screen and (max-width:1500px) {
+
+.some__selector {
+	font-size: 10px;
+	color: #00f;
+}
+
+}
+
+@media screen and (max-width:1400px) {
+
+.some__selector {
+	font-size: 15px;
+	color: red;
+}
+
+.some__selector2 {
+	font-size: 10px;
+}
+
+}
+

@@ -1,0 +1,31 @@
+$red: red;
+
+@mixin fontBold {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}
+
+.example {
+  @include fontBold;
+
+  background-image: linear-gradient(to left, #000, #fff);
+  color: $red;
+  transform: matrix();
+}
+
+.some__selector {
+  @media screen and (max-width: 1400px) {
+    font-size: 15px;
+    color: red;
+  }
+  @media screen and (max-width: 1500px) {
+    font-size: 10px;
+    color: blue;
+  }
+}
+
+.some__selector2 {
+  @media screen and (max-width: 1400px) {
+    font-size: 10px;
+  }
+}

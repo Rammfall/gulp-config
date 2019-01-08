@@ -1,0 +1,11 @@
+@import "some-sass-file";
+
+body {
+  @include fontBold;
+  color: $red;
+  resize: both;
+}
+
+.some {
+  color: blue;
+}
