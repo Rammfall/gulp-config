@@ -135,7 +135,8 @@ function browserSync() {
     server: "./app/"
   } );
 
-  // gulp.watch( path.css.dev ).on("change", browser.reload());
+  gulp.watch( path.html.dev ).on("change", browser.reload);
+  // gulp.watch('app/*.html').on('change', browser.reload);
 }
 
 let build = gulp.series( clean, gulp.parallel( publicCSS, publicJS, font, optimizeImages, optimizeSVG, htmlMin ) );
