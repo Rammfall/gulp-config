@@ -1,3 +1,4 @@
+
 const autoprefixer = require('autoprefixer'),
   browser = require('browser-sync'),
   concat = require('gulp-concat'),
@@ -12,86 +13,89 @@ const autoprefixer = require('autoprefixer'),
   sourceMap = require('gulp-sourcemaps'),
   uglify = require('gulp-uglify-es').default,
   svgmin = require('gulp-svgmin'),
-  babel = require('gulp-babel');
+  babel = require('gulp-babel'),
+  compiler = require('webpack'),
+  webpack = require('webpack-stream')
 
 //Enter syntax sass or scss
 let syntax = 'scss';
 
 //Write path to scripts-files in array which will be concat
 
-let jsFiles = ['app/scripts/first.js', 'app/scripts/second.js'];
+let jsFiles = ['dev/scripts/first.js', 'dev/scripts/second.js'];
 
 //PATH TO FILES
-let path = {
-  css: {
-    input: 'app/' + syntax + '/main.' + syntax,
-    watcher: 'app/' + syntax + '/**/*.' + syntax,
-    dev: 'app/css/',
-    public: 'public/css'
-  },
-  images: {
-    dev: 'app/img/**/*.*',
-    public: 'public/img/'
-  },
-  svg: {
-    dev: 'app/icons/**/*.svg',
-    public: 'public/icons/'
-  },
-  js: {
-    dev: 'app/js',
-    public: 'public/js',
-    watcher: 'app/scripts/**/*.js'
-  },
-  fonts: {
-    dev: 'app/fonts/**/*.*',
-    public: 'public/fonts/'
-  },
-  html: {
-    dev: 'app/*.html',
-    public: 'public/'
-  }
-};
+// let path = {
+//   css: {
+//     input: 'dev/' + syntax + '/main.' + syntax,
+//     watcher: 'dev/' + syntax + '/**/*.' + syntax,
+//     dev: 'dev/css/',
+//     public: 'public/css'
+//   },
+//   images: {
+//     dev: 'dev/img/**/*.*',
+//     public: 'public/img/'
+//   },
+//   svg: {
+//     dev: 'dev/icons/**/*.svg',
+//     public: 'public/icons/'
+//   },
+//   js: {
+//     dev: 'dev/js',
+//     public: 'public/js',
+//     watcher: 'dev/scripts/**/*.js'
+//   },
+//   fonts: {
+//     dev: 'dev/fonts/**/*.*',
+//     public: 'public/fonts/'
+//   },
+//   html: {
+//     dev: 'dev/*.html',
+//     public: 'public/'
+//   }
+// };
 
 
 //CSS TASKS
 
 //CSS task with source maps
 function devCSS() {
-  return gulp.src(path.css.input)
+  return gulp.src('./dev/scss/main.scss')
     .pipe( sourceMap.init() )
     .pipe( sass( {outputStyle: 'compressed'} ).on( 'error', sass.logError ) )
     .pipe( postcss( [autoprefixer, cssnano] ) )
     .pipe( mmq( {log: true} ) )
-    .pipe( gulp.dest( path.css.dev ) )
+    .pipe( gulp.dest( './public/' ) )
     .pipe( browser.reload({stream: true}) )
     .pipe( sourceMap.write() )
-    .pipe( gulp.dest( path.css.dev ) );
+    .pipe( gulp.dest( 'public/' ) );
 }
 
 //CSS task without source maps
 function publicCSS() {
-  return gulp.src( path.css.input )
+  return gulp.src( './dev/scss/main.scss' )
     .pipe( sass( {outputStyle: 'compressed'} ).on( 'error', sass.logError ) )
     .pipe( postcss( [autoprefixer, cssnano] ) )
     .pipe( mmq( {log: true} ) )
-    .pipe( gulp.dest( path.css.public ) );
+    .pipe( gulp.dest( './build/css/' ) );
 }
 
 //JS task with source maps
 function devJS() {
-  return gulp.src( jsFiles, {base: 'app/scripts'} )
-    .pipe( sourceMap.init( {loadMaps: true} ) )
-    .pipe( concat('main.js') )
-    .pipe( sourceMap.write() )
-    .pipe( gulp.dest( path.js.dev ) );
+  return gulp.src('dev/js/index.js')
+  .pipe(webpack(require('./webpack.config.js'), compiler, function(err, stats) {
+    /* Use stats to do more things if needed */
+  }))
+  .pipe(gulp.dest('public/'));
 }
 
-function publicJS() {
-  return gulp.src( jsFiles, {base: 'app/scripts'} )
-    .pipe( concat( 'main.js' ) )
-    .pipe( uglify() )
-    .pipe( gulp.dest( path.js.public ) );
-}
+
+// function publicJS() {
+//   return gulp.src( jsFiles, {base: 'dev/scripts'} )
+//     .pipe( concat( 'main.js' ) )
+//     .pipe( uglify() )
+//     .pipe( gulp.dest( path.js.public ) );
+// }
 
 //Optimize images
 function optimizeImages() {
@@ -109,39 +113,42 @@ function optimizeSVG() {
 
 //Copy fonts in public folder
 function font() {
-  return gulp.src( path.fonts.dev )
+  return gulp.src( './' )
     .pipe( gulp.dest( path.fonts.public ) );
 }
 
 //HTML minification for public folder
 function htmlMin() {
-  return gulp.src( path.html.dev )
+  return gulp.src( './dev/index.html' )
     .pipe( html() )
-    .pipe( gulp.dest( path.html.public ) );
+    .pipe( gulp.dest('./build/' ) );
 }
 
 //Before new build clean public folder
 function clean() {
-  return del( ['public/**/'] );
+  return del( ['./build/'] );
+}
+function copyHTML() {
+ return gulp.src('./dev/index.html').pipe(gulp.dest('./public/'));
 }
 
 function watch() {
-  gulp.watch( path.css.watcher, devCSS );
-  gulp.watch( path.js.watcher, devJS );
+  gulp.watch( './dev/scss/*.scss', devCSS );
+  gulp.watch( 'dev/*.js', devJS );
 }
 
 function browserSync() {
   browser.init( {
-    server: "./app/"
+    server: "./public/"
   } );
 
-  gulp.watch( path.html.dev ).on("change", browser.reload);
-  // gulp.watch('app/*.html').on('change', browser.reload);
+  gulp.watch( './dev/index.html' ).on("change", browser.reload);
+
 }
 
-let build = gulp.series( clean, gulp.parallel( publicCSS, publicJS, font, optimizeImages, optimizeSVG, htmlMin ) );
-let beforeServer = gulp.parallel( devCSS, devJS );
-let dev = gulp.series( beforeServer, gulp.parallel( browserSync, watch ) );
+let build = gulp.series( clean, gulp.parallel( publicCSS, devJS, htmlMin ) );
+let beforeServer = gulp.parallel(copyHTML, devCSS, devJS);
+let dev = gulp.series( beforeServer, gulp.parallel( browserSync, watch ));
 
 //exports['name task for call in cli'] = nameFunctionTask
 exports.styles = devCSS;

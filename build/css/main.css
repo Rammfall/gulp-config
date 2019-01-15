@@ -14,6 +14,10 @@ body {
 	resize: both;
 }
 
+body div {
+	font-size: 2312px;
+}
+
 .some {
 	color: #00f;
 }

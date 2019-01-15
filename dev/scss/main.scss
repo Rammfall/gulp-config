@@ -4,6 +4,9 @@ body {
   @include fontBold;
   color: $red;
   resize: both;
+  & div {
+    font-size: 2312px;
+  }
 }
 
 .some {

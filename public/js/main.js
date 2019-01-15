@@ -1,1 +1,0 @@
-function firstFunc(n,o){alert(n),console.log(o)}function secondFunc(n){console.log(n)}function main(){return firstFunc("first","second"),()=>{secondFunc("third")}}let variable=main();void 0===variable&&console.log(!0),alert("second"),console.log(()=>{return"hey"});
