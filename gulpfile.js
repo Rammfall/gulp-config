@@ -1,21 +1,34 @@
 
-const autoprefixer = require('autoprefixer'),
-  browser = require('browser-sync'),
-  concat = require('gulp-concat'),
-  cssnano = require('cssnano'),
-  del = require('del'),
-  gulp = require('gulp'),
-  html = require('gulp-htmlmin'),
-  image = require('gulp-image'),
-  mmq = require('gulp-merge-media-queries'),
-  postcss = require('gulp-postcss'),
-  sass = require('gulp-sass'),
-  sourceMap = require('gulp-sourcemaps'),
-  uglify = require('gulp-uglify-es').default,
-  svgmin = require('gulp-svgmin'),
-  babel = require('gulp-babel'),
-  compiler = require('webpack'),
-  webpack = require('webpack-stream')
+const autoprefixer = require('autoprefixer');
+const browser = require('browser-sync');
+const concat = require('gulp-concat');
+const cssnano = require('cssnano');
+const  del = require('del');
+const gulp = require('gulp');
+const html = require('gulp-htmlmin');
+const image = require('gulp-image');
+const mmq = require('gulp-merge-media-queries');
+const postcss = require('gulp-postcss');
+const sass = require('gulp-sass');
+const sourceMap = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify-es').default;
+const svgmin = require('gulp-svgmin');
+const babel = require('gulp-babel');
+const compiler = require('webpack');
+const webpack = require('webpack-stream');
+const gulpif = require('gulp-if');
+
+let {
+  argv
+} = require('yargs');
+
+if (argv.production) {
+  process.env.NODE_ENV = 'production';
+}
+
+if (argv.development) {
+  process.env.NODE_ENV = 'development';
+}
 
 //Enter syntax sass or scss
 let syntax = 'scss';
@@ -63,20 +76,20 @@ function devCSS() {
   return gulp.src('./dev/scss/main.scss')
     .pipe( sourceMap.init() )
     .pipe( sass( {outputStyle: 'compressed'} ).on( 'error', sass.logError ) )
-    .pipe( postcss( [autoprefixer, cssnano] ) )
     .pipe( mmq( {log: true} ) )
-    .pipe( gulp.dest( './public/' ) )
+    .pipe( postcss( [autoprefixer, cssnano] ) )
+    // .pipe( gulp.dest( './public/' ) )
     .pipe( browser.reload({stream: true}) )
     .pipe( sourceMap.write() )
-    .pipe( gulp.dest( 'public/' ) );
+    .pipe( gulp.dest( 'public/css/' ) );
 }
 
 //CSS task without source maps
-function publicCSS() {
+function buildCSS() {
   return gulp.src( './dev/scss/main.scss' )
     .pipe( sass( {outputStyle: 'compressed'} ).on( 'error', sass.logError ) )
-    .pipe( postcss( [autoprefixer, cssnano] ) )
     .pipe( mmq( {log: true} ) )
+    .pipe( postcss( [autoprefixer, cssnano] ) )
     .pipe( gulp.dest( './build/css/' ) );
 }
 
@@ -86,7 +99,8 @@ function devJS() {
   .pipe(webpack(require('./webpack.config.js'), compiler, function(err, stats) {
     /* Use stats to do more things if needed */
   }))
-  .pipe(gulp.dest('public/'));
+  .pipe(gulpif(process.env.NODE_ENV === "production", gulp.dest('./build/js/')))
+  .pipe(gulpif(process.env.NODE_ENV === "development", gulp.dest('./public/js/')))
 }
 
 
@@ -136,17 +150,20 @@ function watch() {
   gulp.watch( './dev/scss/*.scss', devCSS );
   gulp.watch( 'dev/*.js', devJS );
 }
+function watchHTML() {
+  gulp.watch( './public/', browser.reload );
+}
 
 function browserSync() {
-  browser.init( {
+  browser.init({
     server: "./public/"
-  } );
+  });
 
-  gulp.watch( './dev/index.html' ).on("change", browser.reload);
+  gulp.watch( './dev/index.html' ).on("change", gulp.parallel(copyHTML, watchHTML));
 
 }
 
-let build = gulp.series( clean, gulp.parallel( publicCSS, devJS, htmlMin ) );
+let build = gulp.series( clean, gulp.parallel( buildCSS, devJS, htmlMin ) );
 let beforeServer = gulp.parallel(copyHTML, devCSS, devJS);
 let dev = gulp.series( beforeServer, gulp.parallel( browserSync, watch ));
 

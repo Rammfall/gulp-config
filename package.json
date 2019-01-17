@@ -5,20 +5,21 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "autoprefixer": "^9.2.1",
     "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.5",
     "cssnano": "^4.0.0",
-    "@babel/core": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
-    "autoprefixer": "^9.2.1",
-    "babel-loader": "^8.0.2",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^5.0.1",
+    "gulp-if": "^2.0.2",
     "gulp-image": "^4.3.0",
     "gulp-merge-media-queries": "^0.2.1",
     "gulp-postcss": "^8.0.0",
@@ -28,10 +29,13 @@
     "gulp-uglify-es": "^1.0.4",
     "webpack": "^4.28.4",
     "webpack-cli": "^3.0.3",
-    "webpack-stream": "^5.2.1"
+    "webpack-stream": "^5.2.1",
+    "yargs": "^12.0.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp --development",
+    "build": "gulp build --production"
   },
   "repository": {
     "type": "git",
