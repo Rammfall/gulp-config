@@ -1,4 +1,3 @@
-
 const autoprefixer = require('autoprefixer');
 const browser = require('browser-sync');
 const concat = require('gulp-concat');
@@ -33,41 +32,22 @@ if (argv.development) {
 //Enter syntax sass or scss
 let syntax = 'scss';
 
-//Write path to scripts-files in array which will be concat
+let path = {
+  css: {
+    dev: './dev/' + syntax + '/main.' + syntax,
+    public: './public/css/',
+    build: './build/css/',
+    watcher: './dev/' + syntax + './**/*.' + syntax
+  },
+  js: {
 
-let jsFiles = ['dev/scripts/first.js', 'dev/scripts/second.js'];
-
-//PATH TO FILES
-// let path = {
-//   css: {
-//     input: 'dev/' + syntax + '/main.' + syntax,
-//     watcher: 'dev/' + syntax + '/**/*.' + syntax,
-//     dev: 'dev/css/',
-//     public: 'public/css'
-//   },
-//   images: {
-//     dev: 'dev/img/**/*.*',
-//     public: 'public/img/'
-//   },
-//   svg: {
-//     dev: 'dev/icons/**/*.svg',
-//     public: 'public/icons/'
-//   },
-//   js: {
-//     dev: 'dev/js',
-//     public: 'public/js',
-//     watcher: 'dev/scripts/**/*.js'
-//   },
-//   fonts: {
-//     dev: 'dev/fonts/**/*.*',
-//     public: 'public/fonts/'
-//   },
-//   html: {
-//     dev: 'dev/*.html',
-//     public: 'public/'
-//   }
-// };
-
+  },
+  html: {
+    dev: './dev/*.html',
+    public: './public/',
+    build: './build/'
+  }
+};
 
 //CSS TASKS
 
@@ -102,14 +82,6 @@ function devJS() {
   .pipe(gulpif(process.env.NODE_ENV === "production", gulp.dest('./build/js/')))
   .pipe(gulpif(process.env.NODE_ENV === "development", gulp.dest('./public/js/')))
 }
-
-
-// function publicJS() {
-//   return gulp.src( jsFiles, {base: 'dev/scripts'} )
-//     .pipe( concat( 'main.js' ) )
-//     .pipe( uglify() )
-//     .pipe( gulp.dest( path.js.public ) );
-// }
 
 //Optimize images
 function optimizeImages() {
