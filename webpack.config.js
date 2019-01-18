@@ -4,7 +4,7 @@ const env = process.env.NODE_ENV || 'development';
 
 module.exports = {
     mode: env,
-    entry: path.resolve(__dirname, 'dev/js'),
+    entry:["@babel/polyfill", path.resolve(__dirname, 'dev/js')],
     output: {
         path: outputDir,
         filename: 'bundle.js'
@@ -13,7 +13,9 @@ module.exports = {
         rules: [{
             test: /\.js$/,
             exclude: /node_modules/,
-            use: ['babel-loader']
+            use: {
+                loader: "babel-loader"
+            }
         }]
     }
 };

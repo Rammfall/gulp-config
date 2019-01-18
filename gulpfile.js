@@ -95,6 +95,7 @@ function buildCSS() {
 
 //JS task with source maps
 function devJS() {
+  console.log('devJS');
   return gulp.src('dev/js/index.js')
   .pipe(webpack(require('./webpack.config.js'), compiler, function(err, stats) {
     /* Use stats to do more things if needed */
@@ -148,7 +149,7 @@ function copyHTML() {
 
 function watch() {
   gulp.watch( './dev/scss/*.scss', devCSS );
-  gulp.watch( 'dev/*.js', devJS );
+  gulp.watch( './dev/js/*.js', gulp.parallel(devJS, browser.reload));
 }
 function watchHTML() {
   gulp.watch( './public/', browser.reload );
