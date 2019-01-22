@@ -19,7 +19,7 @@ fetch('https://api.chucknorris.io/jokes/random').then(function(response) {
 }).then(function(myBlob) {
   console.log('test2')
   console.log(myBlob.value);
-  
+  0
 });
 
 
