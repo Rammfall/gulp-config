@@ -1,142 +1,133 @@
 const autoprefixer = require('autoprefixer');
-const browser = require('browser-sync');
-const concat = require('gulp-concat');
-const cssnano = require('cssnano');
-const del = require('del');
-const gulp = require('gulp');
-const html = require('gulp-htmlmin');
-const image = require('gulp-image');
-const mmq = require('gulp-merge-media-queries');
-const postcss = require('gulp-postcss');
-const sass = require('gulp-sass');
-const sourceMap = require('gulp-sourcemaps');
-const uglify = require('gulp-uglify-es').default;
-const svgmin = require('gulp-svgmin');
-const babel = require('gulp-babel');
-const compiler = require('webpack');
-const webpack = require('webpack-stream');
-const gulpif = require('gulp-if');
+ const browser = require('browser-sync');
+ const concat = require('gulp-concat');
+ const cssnano = require('cssnano');
+ const del = require('del');
+ const gulp = require('gulp');
+ const html = require('gulp-htmlmin');
+ const image = require('gulp-image');
+ const mmq = require('gulp-merge-media-queries');
+ const postcss = require('gulp-postcss');
+ const sass = require('gulp-sass');
+ const sourceMap = require('gulp-sourcemaps');
+ const uglify = require('gulp-uglify-es').default;
+ const svgmin = require('gulp-svgmin');
+ const babel = require('gulp-babel');
+ const stylelint = require('stylelint');
 
-
-
-let {
-  argv
-} = require('yargs');
-
-if (argv.production) {
-  process.env.NODE_ENV = 'production';
-}
-
-if (argv.development) {
-  process.env.NODE_ENV = 'development';
-}
+ const rename = require('gulp-rename');
+ const webpack = require('webpack');
+ const webpackStream = require('webpack-stream');
 
 //Enter syntax sass or scss
 let syntax = 'scss';
 
 //Write path to scripts-files in array which will be concat
 
-let jsFiles = ['dev/scripts/first.js', 'dev/scripts/second.js'];
+let jsFiles = [''];
 
 //PATH TO FILES
-// let path = {
-//   css: {
-//     input: 'dev/' + syntax + '/main.' + syntax,
-//     watcher: 'dev/' + syntax + '/**/*.' + syntax,
-//     dev: 'dev/css/',
-//     public: 'public/css'
-//   },
-//   images: {
-//     dev: 'dev/img/**/*.*',
-//     public: 'public/img/'
-//   },
-//   svg: {
-//     dev: 'dev/icons/**/*.svg',
-//     public: 'public/icons/'
-//   },
-//   js: {
-//     dev: 'dev/js',
-//     public: 'public/js',
-//     watcher: 'dev/scripts/**/*.js'
-//   },
-//   fonts: {
-//     dev: 'dev/fonts/**/*.*',
-//     public: 'public/fonts/'
-//   },
-//   html: {
-//     dev: 'dev/*.html',
-//     public: 'public/'
-//   }
-// };
+let path = {
+  css: {
+    src: 'app/src/styles/main.' + syntax,
+    watcher: 'app/src/styles/*.' + syntax,
+    dev: 'app/dev/styles',
+    public: 'public/css'
+  },
+  images: {
+    src: 'app/src/images/*.*',
+    dev: 'app/dev/images/',
+    public: 'app/dev/images/'
+  },
+  svg: {
+    dev: 'app/icons/**/*.svg',
+    public: 'public/icons/'
+  },
+  js: {
+    src: 'app/src/js/main.js',
+    dev: 'app/dev/js/',
+    public: 'public/js',
+    watcher: 'app/scripts/**/*.js'
+  },
+  fonts: {
+    dev: 'app/fonts/**/*.*',
+    public: 'public/fonts/'
+  },
+  html: {
+    src: 'app/src/*.html',
+    dev: 'app/dev/',
+    public: 'app/dev/'
+  }
+};
 
 
 //CSS TASKS
 
 //CSS task with source maps
 function devCSS() {
-  return gulp.src('./dev/scss/main.scss')
-    .pipe(sourceMap.init())
-    .pipe(sass({
-      outputStyle: 'compressed'
-    }).on('error', sass.logError))
-    .pipe(mmq({
-      log: true
-    }))
+  return gulp.src(path.css.src)
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(mmq())
     .pipe(postcss([autoprefixer, cssnano]))
-    // .pipe( gulp.dest( './public/' ) )
-    .pipe(browser.reload({
-      stream: true
-    }))
-    .pipe(sourceMap.write())
-    .pipe(gulp.dest('public/css/'));
+    .pipe(gulp.dest(path.css.dev))
+    .pipe(browser.stream());
+}
+
+function linter() {
+  return gulp.src(path.css.watcher)
+    .pipe(postcss(linter('./stylelint.config.js')));
 }
 
 //CSS task without source maps
-function buildCSS() {
-  return gulp.src('./dev/scss/main.scss')
-    .pipe(sass({
-      outputStyle: 'compressed'
-    }).on('error', sass.logError))
-    .pipe(mmq({
-      log: true
-    }))
+function publicCSS() {
+  return gulp.src(path.css.src)
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(postcss([autoprefixer, cssnano]))
-    .pipe(gulp.dest('./build/css/'));
+    .pipe(mmq({log: true}))
+    .pipe(gulp.dest(path.css.public));
 }
 
 //JS task with source maps
-// function devJS() {
-//   console.log('devJS');
-//   return gulp.src('dev/js/index.js')
-//   .pipe(webpack(require('./webpack.config.js'), compiler, function(err, stats) {
-//     /* Use stats to do more things if needed */
-//   }))
-//   .pipe(gulpif(process.env.NODE_ENV === "production", gulp.dest('./build/js/')))
-//   .pipe(gulpif(process.env.NODE_ENV === "development", gulp.dest('./public/js/')))
-// }
 function devJS() {
-  return gulp.src(['node_modules/babel-polyfill/dist/polyfill.js', './dev/js/*.js'])
-    .pipe(babel({
-      presets: ['@babel/preset-env'],
-      plugins: [
-        "@babel/plugin-proposal-class-properties",
-      ]
+  return gulp.src(path.js.src)
+    .pipe(webpackStream({
+      output: {
+        filename: 'main.js',
+      },
+      module: {
+        rules: [
+          {
+            test: /\.(js)$/,
+            exclude: /(node_modules)/,
+            loader: 'babel-loader',
+            query: {
+              presets: ['env']
+            }
+          }
+        ]
+      },
     }))
-    .pipe(gulp.dest('./public/js/'))
+    .pipe(gulp.dest(path.js.dev));
 }
 
 // function publicJS() {
-//   return gulp.src( jsFiles, {base: 'dev/scripts'} )
-//     .pipe( concat( 'main.js' ) )
-//     .pipe( uglify() )
-//     .pipe( gulp.dest( path.js.public ) );
-// }
+//     return gulp.src( jsFiles, {base: 'app/scripts'} )
+//       .pipe( concat( 'main.js' ) )
+//       .pipe(babel({
+//         presets: ['@babel/preset-env'],
+//         plugins: [
+//           "@babel/plugin-proposal-class-properties",
+//         ]
+//       }))
+//       .pipe( uglify() )
+//       .pipe( gulp.dest( path.js.public ) );
+//   }
 
 //Optimize images
 function optimizeImages() {
-  return gulp.src(path.images.dev)
+  return gulp.src(path.images.src)
     .pipe(image())
-    .pipe(gulp.dest(path.images.public));
+    .pipe(gulp.dest(path.images.dev));
 }
 
 //Optimize svg
@@ -148,46 +139,39 @@ function optimizeSVG() {
 
 //Copy fonts in public folder
 function font() {
-  return gulp.src('./')
+  return gulp.src(path.fonts.dev)
     .pipe(gulp.dest(path.fonts.public));
 }
 
 //HTML minification for public folder
 function htmlMin() {
-  return gulp.src('./dev/index.html')
+  return gulp.src(path.html.src)
     .pipe(html())
-    .pipe(gulp.dest('./build/'));
+    .pipe(gulp.dest(path.html.dev));
 }
 
 //Before new build clean public folder
 function clean() {
-  return del(['./build/']);
-}
-
-function copyHTML() {
-  return gulp.src('./dev/index.html').pipe(gulp.dest('./public/'));
+  return del(['public/**/']);
 }
 
 function watch() {
-  gulp.watch('./dev/scss/*.scss', devCSS);
-}
-
-function watchHTML() {
-  gulp.watch('./public/', browser.reload);
+  gulp.watch(path.css.watcher, devCSS);
+  gulp.watch(path.js.src, devJS);
+  gulp.watch(path.html.src, htmlMin);
 }
 
 function browserSync() {
   browser.init({
-    server: "./public/"
+    server: "./app/dev/"
   });
 
-  gulp.watch('./dev/index.html').on("change", gulp.parallel(copyHTML, watchHTML));
-
-  gulp.watch('./dev/js/*.js').on("change", gulp.parallel(devJS, browser.reload));
+  gulp.watch(path.html.dev).on("change", browser.reload);
+  gulp.watch(path.js.watcher).on("change", browser.reload);
 }
 
-let build = gulp.series(clean, gulp.parallel(buildCSS, devJS, htmlMin));
-let beforeServer = gulp.parallel(copyHTML, devCSS, devJS);
+// let build = gulp.series(clean, gulp.parallel(publicCSS, publicJS, font, optimizeImages, optimizeSVG, htmlMin));
+let beforeServer = gulp.parallel(htmlMin, devCSS, devJS, optimizeImages);
 let dev = gulp.series(beforeServer, gulp.parallel(browserSync, watch));
 
 //exports['name task for call in cli'] = nameFunctionTask
@@ -196,7 +180,7 @@ exports.optimizeImages = optimizeImages;
 exports.optimizeSVG = optimizeSVG;
 exports.clean = clean;
 exports.watch = watch;
-exports.build = build;
-exports.js = devJS;
+// exports.build = build;
+// exports.js = publicJS;
 
 exports.default = dev;
