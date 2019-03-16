@@ -1,6 +1,5 @@
 const autoprefixer = require('autoprefixer');
  const browser = require('browser-sync');
- const concat = require('gulp-concat');
  const cssnano = require('cssnano');
  const del = require('del');
  const gulp = require('gulp');
@@ -10,7 +9,6 @@ const autoprefixer = require('autoprefixer');
  const postcss = require('gulp-postcss');
  const sass = require('gulp-sass');
  const sourceMap = require('gulp-sourcemaps');
- const uglify = require('gulp-uglify-es').default;
  const svgmin = require('gulp-svgmin');
  const babel = require('gulp-babel');
  const stylelint = require('stylelint');
@@ -21,8 +19,6 @@ const autoprefixer = require('autoprefixer');
 
 //Enter syntax sass or scss
 let syntax = 'scss';
-
-let jsFiles = [''];
 
 //PATH TO FILES
 let path = {
@@ -180,4 +176,9 @@ exports.watch = watch;
 // exports.build = build;
 // exports.js = publicJS;
 
+function check() {
+  return console.log(process.env.NODE_ENV);
+}
+
 exports.default = dev;
+exports.check = check;
