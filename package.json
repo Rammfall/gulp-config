@@ -1,18 +1,28 @@
 {
-  "name": "gulp-config",
+  "name": "test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {
-    "@babel/polyfill": "^7.2.5"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gulp": "gulp",
+    "build": "gulp build"
   },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
-    "@babel/preset-env": "^7.2.3",
     "autoprefixer": "^9.2.1",
+    "axios": "^0.18.0",
     "babel-core": "^6.26.3",
-    "babel-loader": "^8.0.5",
+    "babel-loader": "^7.1.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.5",
@@ -22,32 +32,20 @@
     "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^5.0.1",
-    "gulp-if": "^2.0.2",
     "gulp-image": "^4.3.0",
     "gulp-merge-media-queries": "^0.2.1",
     "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-svgmin": "^2.1.0",
+    "gulp-uglify": "^3.0.0",
     "gulp-uglify-es": "^1.0.4",
-    "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1",
-    "webpack-stream": "^5.2.1",
-    "yargs": "^12.0.5"
+    "jquery": "^3.3.1",
+    "stylelint": "^9.10.1",
+    "stylelint-order": "^2.1.0",
+    "webpack": "^3.11.0",
+    "webpack-stream": "^4.0.1"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp --development",
-    "build": "gulp build --production"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rammfall/gulp-config.git"
-  },
-  "author": "Bohdan Onatsky",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rammfall/gulp-config/issues"
-  },
-  "homepage": "https://github.com/rammfall/gulp-config#readme"
+  "dependencies": {}
 }
