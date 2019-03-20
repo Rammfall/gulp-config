@@ -2,7 +2,7 @@ const autoprefixer = require('autoprefixer');
 const browser = require('browser-sync');
 const cssnano = require('cssnano');
 const del = require('del');
-const gulp = require('gulp');
+const {src, dest, watch, parallel, series} = require('gulp');
 const html = require('gulp-htmlmin');
 const image = require('gulp-image');
 const mmq = require('gulp-merge-media-queries');
@@ -82,27 +82,27 @@ let path = {
 //CSS TASK
 
 function CSS() {
-  return gulp.src(path.css.src)
+  return src(path.css.src)
     .pipe(gulpif(development, sourceMap.init()))
     .pipe(preprocessors[syntax])
     .pipe(mmq())
     .pipe(gulpif(development, postcss([autoprefixer]), postcss([autoprefixer, cssnano])))
     .pipe(gulpif(development, sourceMap.write()))
-    .pipe(gulpif(development, gulp.dest(path.css.dev), gulp.dest(path.css.public)))
+    .pipe(gulpif(development, dest(path.css.dev), dest(path.css.public)))
     .pipe(gulpif(development, browser.stream()))
 }
 
 //LINTER IS DEVELOP
 
 function linter() {
-  return gulp.src(path.css.watcher)
+  return src(path.css.watcher)
     .pipe(postcss(linter('./stylelint.config.js')));
 }
 
 //JS TASK
 
 function JS() {
-  return gulp.src(path.js.src)
+  return src(path.js.src)
     .pipe(webpackStream({
       output: {
         path: development ? __dirname + '/app/dev/js/' : __dirname + '/app/public/js/',
@@ -133,38 +133,38 @@ function JS() {
         })
       ],
     }))
-    .pipe(gulpif(development, gulp.dest(path.js.dev), gulp.dest(path.js.public)))
+    .pipe(gulpif(development, dest(path.js.dev), dest(path.js.public)))
 }
 
 //OPTIMIZE IMAGE TASK
 
 function optimizeImages() {
-  return gulp.src(path.images.src)
+  return src(path.images.src)
     .pipe(gulpif(!development, image()))
-    .pipe(gulpif(development, gulp.dest(path.images.dev), gulp.dest(path.images.public)))
+    .pipe(gulpif(development, dest(path.images.dev), dest(path.images.public)))
 }
 
 //OPTIMIZE ICONS
 
 function optimizeSVG() {
-  return gulp.src(path.svg.src)
+  return src(path.svg.src)
     .pipe(gulpif(!development, svgmin()))
-    .pipe(gulpif(development, gulp.dest(path.svg.dev), gulp.dest(path.svg.public)));
+    .pipe(gulpif(development, dest(path.svg.dev), dest(path.svg.public)));
 }
 
 //FONT TASK
 
 function font() {
-  return gulp.src(path.fonts.src)
-    .pipe(gulpif(development, gulp.dest(path.fonts.dev), gulp.dest(path.fonts.public)));
+  return src(path.fonts.src)
+    .pipe(gulpif(development, dest(path.fonts.dev), dest(path.fonts.public)));
 }
 
 //HTML MINIFICATION TASK
 
 function htmlMin() {
-  return gulp.src(path.html.src)
+  return src(path.html.src)
     .pipe(gulpif(!development, html({collapseWhitespace: true} )))
-    .pipe(gulpif(development, gulp.dest(path.html.public), gulp.dest(path.html.public)));
+    .pipe(gulpif(development, dest(path.html.public), dest(path.html.public)));
 }
 
 //CLEAN DIRECTORIES
@@ -173,10 +173,10 @@ function clean() {
   return del(['public/**/']);
 }
 
-function watch() {
-  gulp.watch(path.css.watcher, CSS);
-  gulp.watch(path.js.watcher, JS);
-  gulp.watch(path.html.src, htmlMin);
+function watchers() {
+  watch(path.css.watcher, CSS);
+  watch(path.js.watcher, JS);
+  watch(path.html.src, htmlMin);
 }
 
 function browserSync() {
@@ -184,12 +184,12 @@ function browserSync() {
     server: directories.dev
   });
 
-  gulp.watch(path.html.src).on("change", browser.reload);
-  gulp.watch(path.js.src).on("change", browser.reload);
+  watch(path.html.src).on("change", browser.reload);
+  watch(path.js.src).on("change", browser.reload);
 }
 
-let beforeServer = gulp.parallel(CSS, JS, optimizeImages, optimizeSVG, font);
-let dev = development ? gulp.series(beforeServer, gulp.parallel(browserSync, watch)) : beforeServer;
+let beforeServer = parallel(CSS, JS, optimizeImages, optimizeSVG, font);
+let dev = development ? series(beforeServer, parallel(browserSync, watchers)) : beforeServer;
 
 //exports['name task for call in cli'] = nameFunctionTask
 
