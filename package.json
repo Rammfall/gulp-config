@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "gulp": "gulp",
-    "build": "gulp build"
+    "gulp": "gulp --dev",
+    "build": "gulp --prod"
   },
   "repository": {
     "type": "git",
@@ -26,12 +26,14 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.5",
+    "cross-env": "^5.2.0",
     "cssnano": "^4.0.0",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^5.0.1",
+    "gulp-if": "^2.0.2",
     "gulp-image": "^4.3.0",
     "gulp-merge-media-queries": "^0.2.1",
     "gulp-postcss": "^8.0.0",
@@ -41,9 +43,11 @@
     "gulp-svgmin": "^2.1.0",
     "gulp-uglify": "^3.0.0",
     "gulp-uglify-es": "^1.0.4",
+    "html-webpack-plugin": "^3.2.0",
     "jquery": "^3.3.1",
     "stylelint": "^9.10.1",
     "stylelint-order": "^2.1.0",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^3.11.0",
     "webpack-stream": "^4.0.1"
   },

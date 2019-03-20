@@ -14,17 +14,23 @@ const autoprefixer = require('autoprefixer');
  const svgmin = require('gulp-svgmin');
  const babel = require('gulp-babel');
  const stylelint = require('stylelint');
+ const gulpif = require('gulp-if');
 
  const rename = require('gulp-rename');
  const webpack = require('webpack');
  const webpackStream = require('webpack-stream');
+ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+ const development = !process.argv.includes('--prod');
+
+ console.log('development', development);
 //Enter syntax sass or scss
 let syntax = 'scss';
-
+// .pipe(gulpif(condition, uglify()))
 //Write path to scripts-files in array which will be concat
 
-let jsFiles = [''];
+let lpName = '';
 
 //PATH TO FILES
 let path = {
@@ -32,7 +38,7 @@ let path = {
     src: 'app/src/styles/main.' + syntax,
     watcher: 'app/src/styles/*.' + syntax,
     dev: 'app/dev/styles',
-    public: 'public/css'
+    public: 'app/public/styles'
   },
   images: {
     src: 'app/src/images/*.*',
@@ -46,8 +52,8 @@ let path = {
   js: {
     src: 'app/src/js/main.js',
     dev: 'app/dev/js/',
-    public: 'public/js',
-    watcher: 'app/scripts/**/*.js'
+    public: 'app/public/js',
+    watcher: ''
   },
   fonts: {
     dev: 'app/fonts/**/*.*',
@@ -56,7 +62,7 @@ let path = {
   html: {
     src: 'app/src/*.html',
     dev: 'app/dev/',
-    public: 'app/dev/'
+    public: 'app/build/'
   }
 };
 
@@ -66,11 +72,11 @@ let path = {
 //CSS task with source maps
 function devCSS() {
   return gulp.src(path.css.src)
-    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(sass().on('error', sass.logError))
     .pipe(mmq())
-    .pipe(postcss([autoprefixer, cssnano]))
-    .pipe(gulp.dest(path.css.dev))
-    .pipe(browser.stream());
+    .pipe(gulpif(development, postcss([autoprefixer]), postcss([autoprefixer, cssnano])))
+    .pipe(gulpif(development, gulp.dest(path.css.dev), gulp.dest(path.css.public)))
+    .pipe(gulpif(development, browser.stream())) 
 }
 
 function linter() {
@@ -79,21 +85,23 @@ function linter() {
 }
 
 //CSS task without source maps
-function publicCSS() {
-  return gulp.src(path.css.src)
-    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-    .pipe(postcss([autoprefixer, cssnano]))
-    .pipe(mmq({log: true}))
-    .pipe(gulp.dest(path.css.public));
-}
+// function publicCSS() {
+//   return gulp.src(path.css.src)
+//     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+//     .pipe(postcss([autoprefixer, cssnano]))
+//     .pipe(mmq({log: true}))
+//     .pipe(gulp.dest(path.css.public));
+// }
 
 //JS task with source maps
 function devJS() {
   return gulp.src(path.js.src)
     .pipe(webpackStream({
       output: {
-        filename: 'main.js',
+        path: development ? __dirname + '/app/dev/js/' : __dirname + '/app/public/js/',
+        filename: development ? 'main.js' : 'main.min.js',
       },
+      devtool: development ? 'source-map' : '',
       module: {
         rules: [
           {
@@ -106,6 +114,17 @@ function devJS() {
           }
         ]
       },
+      plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+          include: /\.min\.js$/,
+          minimize: true
+        }), 
+        new HtmlWebpackPlugin({
+          inject: true,
+          filename: './../index.html',
+          template: './app/src/index.html'
+        })
+      ],
     }))
     .pipe(gulp.dest(path.js.dev));
 }
@@ -184,3 +203,4 @@ exports.watch = watch;
 // exports.js = publicJS;
 
 exports.default = dev;
+
