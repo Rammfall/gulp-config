@@ -43,7 +43,7 @@ let path = {
   images: {
     src: 'app/src/images/*.*',
     dev: 'app/dev/images/',
-    public: 'app/dev/images/'
+    public: 'app/public/images/'
   },
   svg: {
     dev: 'app/icons/**/*.svg',
@@ -126,7 +126,7 @@ function devJS() {
         })
       ],
     }))
-    .pipe(gulp.dest(path.js.dev));
+    .pipe(gulpif(development, gulp.dest(path.js.dev), gulp.dest(path.js.public)))
 }
 
 // function publicJS() {
@@ -145,8 +145,8 @@ function devJS() {
 //Optimize images
 function optimizeImages() {
   return gulp.src(path.images.src)
-    .pipe(image())
-    .pipe(gulp.dest(path.images.dev));
+    .pipe(gulpif(!development, image()))
+    .pipe(gulpif(development, gulp.dest(path.images.dev), gulp.dest(path.images.public)))
 }
 
 //Optimize svg
@@ -190,8 +190,8 @@ function browserSync() {
 }
 
 // let build = gulp.series(clean, gulp.parallel(publicCSS, publicJS, font, optimizeImages, optimizeSVG, htmlMin));
-let beforeServer = gulp.parallel(htmlMin, devCSS, devJS, optimizeImages);
-let dev = gulp.series(beforeServer, gulp.parallel(browserSync, watch));
+let beforeServer = gulp.parallel(devCSS, devJS, optimizeImages);
+let dev = development ? gulp.series(beforeServer, gulp.parallel(browserSync, watch)) : beforeServer;
 
 //exports['name task for call in cli'] = nameFunctionTask
 exports.styles = devCSS;
