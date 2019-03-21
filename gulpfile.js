@@ -22,17 +22,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const development = !process.argv.includes('--prod');
 
+
+
 console.log('development', development);
 
 //Enter syntax sass or scss
 
-let syntax = 'less';
+let syntax = 'scss';
 
-let preprocessors = {
-  sass: sass().on('error', sass.logError),
-  scss: sass().on('error', sass.logError),
-  less: less()
-};
 
 //Write path to scripts-files in array which will be concat
 
@@ -82,6 +79,13 @@ let path = {
 //CSS TASK
 
 function CSS() {
+
+  let preprocessors = {
+    sass:  sass().on('error', sass.logError),
+    scss:  sass().on('error', sass.logError),
+    less:  less()
+  };
+
   return src(path.css.src)
     .pipe(gulpif(development, sourceMap.init()))
     .pipe(preprocessors[syntax])
@@ -105,8 +109,8 @@ function JS() {
   return src(path.js.src)
     .pipe(webpackStream({
       output: {
-        path: development ? __dirname + '/app/dev/js/' : __dirname + '/app/public/js/',
-        filename: development ? 'main.js' : 'main.min.js',
+        path: development ? __dirname + directories.dev + 'js/' : __dirname + directories.public + 'js/',
+        filename: 'main.js',
       },
       devtool: development ? 'source-map' : '',
       module: {
@@ -126,11 +130,11 @@ function JS() {
           include: /\.min\.js$/,
           minimize: true
         }),
-        new HtmlWebpackPlugin({
-          inject: true,
-          filename: './../index.html',
-          template: './app/src/index.html'
-        })
+        // new HtmlWebpackPlugin({
+        //   inject: true,
+        //   filename: './../index.html',
+        //   template: './app/src/index.html'
+        // })
       ],
     }))
     .pipe(gulpif(development, dest(path.js.dev), dest(path.js.public)))
@@ -164,7 +168,7 @@ function font() {
 function htmlMin() {
   return src(path.html.src)
     .pipe(gulpif(!development, html({collapseWhitespace: true} )))
-    .pipe(gulpif(development, dest(path.html.public), dest(path.html.public)));
+    .pipe(gulpif(development, dest(path.html.dev), dest(path.html.public)));
 }
 
 //CLEAN DIRECTORIES
@@ -188,7 +192,7 @@ function browserSync() {
   watch(path.js.src).on("change", browser.reload);
 }
 
-let beforeServer = parallel(CSS, JS, optimizeImages, optimizeSVG, font);
+let beforeServer = parallel(htmlMin, CSS, JS, optimizeImages, optimizeSVG, font);
 let dev = development ? series(beforeServer, parallel(browserSync, watchers)) : beforeServer;
 
 //exports['name task for call in cli'] = nameFunctionTask
