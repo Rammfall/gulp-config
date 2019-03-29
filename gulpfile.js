@@ -44,7 +44,7 @@ let directories = {
 let path = {
   css: {
     src: directories.src + 'styles/main.' + syntax,
-    watcher: directories.src + 'styles/*.' + syntax,
+    watcher: directories.src + 'styles/**/*.' + syntax,
     dev: directories.dev + 'styles/',
     public: directories.public + 'styles'
   },
