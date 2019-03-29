@@ -59,7 +59,7 @@ let path = {
     public: directories.public + 'icons/'
   },
   js: {
-    watcher: directories.src + 'js/**/*.*',
+    watcher: directories.src + 'js/**/*.js',
     src: directories.src + 'js/main.js',
     dev: directories.dev + 'js/',
     public: directories.public + 'js/'
@@ -129,7 +129,8 @@ function JS() {
         minimizer: [
             new UglifyJsPlugin({
             test: /\.js(\?.*)?$/i,
-            sourceMap: true
+            sourceMap: true,
+            extractComments: true
           })
         ],
       },
@@ -186,7 +187,7 @@ function browserSync() {
   });
 
   watch(path.html.src).on("change", browser.reload);
-  watch(path.js.src).on("change", browser.reload);
+  watch(path.js.watcher).on("change", browser.reload);
 }
 
 let beforeServer = parallel(htmlMin, CSS, JS, optimizeImages, optimizeSVG, font);
