@@ -1,0 +1,16 @@
+body {
+    background: red;
+
+    @media (max-width: 430px) {
+
+        color: red;
+    }
+}
+
+html {
+    font-size: 19px;
+
+    @media (max-width: 430px) {
+        color: red;
+    }
+}
