@@ -14,60 +14,62 @@ const babel = require('gulp-babel');
 const stylelint = require('stylelint');
 const gulpif = require('gulp-if');
 const less = require('gulp-less');
-
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-
 const development = !process.argv.includes('--prod');
-
 
 
 console.log('development', development);
 
 //Enter syntax sass or scss
 
-let syntax = 'scss';
+const syntax = 'scss';
 
 
 //Write path to scripts-files in array which will be concat
 
-let lpName = '';
-let directories = {
-  src: "./app/src/",
-  dev: "./app/dev/",
-  public: "./app/public/"
+const lpName = '';
+const directories = {
+  src: './app/src/',
+  dev: './app/dev/',
+  public: './app/public/',
+  css: 'styles/',
+  js: 'js/',
+  fonts: 'fonts/',
+  images: 'images/',
+  icons: 'icons/'
 };
 
 //PATH TO FILES
-let path = {
+const path = {
   css: {
-    src: directories.src + 'styles/main.' + syntax,
-    watcher: directories.src + 'styles/**/*.' + syntax,
-    dev: directories.dev + 'styles/',
-    public: directories.public + 'styles'
+    src: directories.src + directories.css + 'main.' + syntax,
+    watcher: directories.src + directories.css + '**/*.' + syntax,
+    dev: directories.dev + directories.css + '',
+    public: directories.public + directories.css + ''
   },
   images: {
-    src: directories.src + 'images/**/*.*',
-    dev: directories.dev + 'images/',
-    public: directories.public + 'images/'
+    src: directories.src + directories.images + '**/*.*',
+    dev: directories.dev + directories.images + '',
+    public: directories.public + directories.images + ''
   },
   svg: {
-    src: directories.src + 'icons/**/*.svg',
-    dev: directories.dev + 'icons/',
-    public: directories.public + 'icons/'
+    src: directories.src + directories.icons + '**/*.svg',
+    dev: directories.dev + directories.icons + '',
+    public: directories.public + directories.icons + ''
   },
   js: {
-    watcher: directories.src + 'js/**/*.js',
-    src: directories.src + 'js/main.js',
-    dev: directories.dev + 'js/',
-    public: directories.public + 'js/'
+    watcher: directories.src + directories.js + '**/*.js',
+    src: directories.src + directories.js + 'main.js',
+    dev: directories.dev + directories.js + '',
+    public: directories.public + directories.js + ''
   },
   fonts: {
-    src: directories.src + 'fonts/**/*.*',
-    dev: directories.dev + 'fonts/',
-    public: directories.public + 'fonts/'
+    src: directories.src + directories.fonts + '**/*.*',
+    dev: directories.dev + directories.fonts + '',
+    public: directories.public + directories.fonts + ''
   },
   html: {
     src: directories.src + '*.html',
@@ -81,9 +83,9 @@ let path = {
 function CSS() {
 
   let preprocessors = {
-    sass:  sass().on('error', sass.logError),
-    scss:  sass().on('error', sass.logError),
-    less:  less()
+    sass: sass().on('error', sass.logError),
+    scss: sass().on('error', sass.logError),
+    less: less()
   };
 
   return src(path.css.src)
@@ -96,20 +98,13 @@ function CSS() {
     .pipe(gulpif(development, browser.stream()))
 }
 
-//LINTER IS DEVELOP
-
-function linter() {
-  return src(path.css.src)
-    .pipe(postcss(linter('./stylelint.config.js')));
-}
-
 //JS TASK
 
 function JS() {
   return src(path.js.src)
     .pipe(webpackStream({
       output: {
-        path: development ?  __dirname + directories.dev + 'js/' : __dirname + directories.public + 'js/',
+        path: development ? __dirname + directories.dev + 'js/' : __dirname + directories.public + 'js/',
         filename: 'main.js',
       },
       devtool: development ? 'source-map' : '',
@@ -133,7 +128,7 @@ function JS() {
       ],
       optimization: {
         minimizer: [
-            new UglifyJsPlugin({
+          new UglifyJsPlugin({
             test: /\.js(\?.*)?$/i,
             sourceMap: true,
             extractComments: true
@@ -171,14 +166,14 @@ function font() {
 
 function htmlMin() {
   return src(path.html.src)
-    .pipe(gulpif(!development, html({collapseWhitespace: true} )))
+    .pipe(gulpif(!development, html({collapseWhitespace: true})))
     .pipe(gulpif(development, dest(path.html.dev), dest(path.html.public)));
 }
 
 //CLEAN DIRECTORIES
 
 function clean() {
-  return del(['public/**/']);
+  return del([directories.dev + directories.icons, directories.dev + directories.images, directories.dev + directories.js, directories.dev + directories.fonts, directories.dev + directories.css]);
 }
 
 function watchers() {
@@ -192,14 +187,13 @@ function browserSync() {
     server: directories.dev
   });
 
-  watch(path.html.src).on("change", browser.reload);
-  watch(path.js.watcher).on("change", browser.reload);
+  watch(path.html.src).on('change', browser.reload);
+  watch(path.js.watcher).on('change', browser.reload);
 }
 
-let beforeServer = parallel(htmlMin, CSS, JS, optimizeImages, optimizeSVG, font);
-let dev = development ? series(beforeServer, parallel(browserSync, watchers)) : beforeServer;
+const beforeServer = parallel(htmlMin, CSS, JS, optimizeImages, optimizeSVG, font);
+const dev = development ? series(beforeServer, parallel(browserSync, watchers)) : series(clean, beforeServer);
 
 //exports['name task for call in cli'] = nameFunctionTask
 
 exports.default = dev;
-exports.lint = linter;

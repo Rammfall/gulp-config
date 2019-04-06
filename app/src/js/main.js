@@ -1,5 +1,2 @@
-const $ = require('jquery');
+let a = 'dgf';
 
-window.$ = $;
-
-window.$.ajax = $.ajax;
