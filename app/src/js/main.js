@@ -1,2 +1,3 @@
-let a = 'dgf';
+const b = 'dgsdg';
 
+alert(b);

@@ -1,5 +1,6 @@
 export default class A {
-    static color = "red";
+    static color = 'red';
+
     counter = 0;
 
     handleClick = () => {
@@ -10,5 +11,5 @@ export default class A {
     handleLongClick() {
       this.counter++;
       console.log(this.counter);
-    };
-  }
+    }
+}

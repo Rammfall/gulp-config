@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "gulp --dev",
     "build": "gulp --prod",
-    "lint:css": "stylelint ./**/*.scss --syntax scss --color --formatter verbose --fix"
+    "lint:css": "stylelint ./**/*.scss --syntax scss --color --formatter verbose --fix",
+    "lint:js": "eslint ./app/src --color --format stylish --fix"
   },
   "repository": {
     "type": "git",
@@ -22,12 +23,18 @@
     "@babel/plugin-proposal-class-properties": "^7.4.0",
     "@babel/preset-env": "^7.1.0",
     "autoprefixer": "^9.2.1",
+    "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
     "browser-sync": "^2.24.5",
     "core-js": "^3.0.0",
     "cross-env": "^5.2.0",
     "cssnano": "^4.0.0",
     "del": "^3.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4",
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-htmlmin": "^5.0.1",
