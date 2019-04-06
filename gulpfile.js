@@ -23,12 +23,12 @@ const development = !process.argv.includes('--prod');
 
 console.log('development', development);
 
-//Enter syntax sass or scss
+//  Enter syntax sass or scss
 
 const syntax = 'scss';
 
 
-//Write path to scripts-files in array which will be concat
+//  Write path to scripts-files in array which will be concat
 
 const lpName = '';
 const directories = {
@@ -42,7 +42,7 @@ const directories = {
   icons: 'icons/'
 };
 
-//PATH TO FILES
+//  PATH TO FILES
 const path = {
   css: {
     src: directories.src + directories.css + 'main.' + syntax,
@@ -78,7 +78,7 @@ const path = {
   }
 };
 
-//CSS TASK
+//  CSS TASK
 
 function CSS() {
 
@@ -98,7 +98,7 @@ function CSS() {
     .pipe(gulpif(development, browser.stream()))
 }
 
-//JS TASK
+//  JS TASK
 
 function JS() {
   return src(path.js.src)
@@ -139,7 +139,7 @@ function JS() {
     .pipe(gulpif(development, dest(path.js.dev), dest(path.js.public)))
 }
 
-//OPTIMIZE IMAGE TASK
+//  OPTIMIZE IMAGE TASK
 
 function optimizeImages() {
   return src(path.images.src)
@@ -147,7 +147,7 @@ function optimizeImages() {
     .pipe(gulpif(development, dest(path.images.dev), dest(path.images.public)))
 }
 
-//OPTIMIZE ICONS
+//  OPTIMIZE ICONS
 
 function optimizeSVG() {
   return src(path.svg.src)
@@ -155,14 +155,14 @@ function optimizeSVG() {
     .pipe(gulpif(development, dest(path.svg.dev), dest(path.svg.public)));
 }
 
-//FONT TASK
+//  FONT TASK
 
 function font() {
   return src(path.fonts.src)
     .pipe(gulpif(development, dest(path.fonts.dev), dest(path.fonts.public)));
 }
 
-//HTML MINIFICATION TASK
+//  HTML MINIFICATION TASK
 
 function htmlMin() {
   return src(path.html.src)
@@ -170,7 +170,7 @@ function htmlMin() {
     .pipe(gulpif(development, dest(path.html.dev), dest(path.html.public)));
 }
 
-//CLEAN DIRECTORIES
+//  CLEAN DIRECTORIES
 
 function clean() {
   return del([directories.dev + directories.icons, directories.dev + directories.images, directories.dev + directories.js, directories.dev + directories.fonts, directories.dev + directories.css]);
@@ -194,6 +194,6 @@ function browserSync() {
 const beforeServer = parallel(htmlMin, CSS, JS, optimizeImages, optimizeSVG, font);
 const dev = development ? series(beforeServer, parallel(browserSync, watchers)) : series(clean, beforeServer);
 
-//exports['name task for call in cli'] = nameFunctionTask
+//  exports['name task for call in cli'] = nameFunctionTask
 
 exports.default = dev;
