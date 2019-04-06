@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "gulp --dev",
-    "build": "gulp --prod"
+    "build": "gulp --prod",
+    "lint:css": "stylelint ./**/*.scss --syntax scss --color --formatter verbose --fix"
   },
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-svgmin": "^2.1.0",
     "stylelint": "^9.10.1",
-    "stylelint-order": "^2.1.0",
+    "stylelint-config-standard": "^18.2.0",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.6",
     "webpack-stream": "^5.2.1"

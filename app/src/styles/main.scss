@@ -1,16 +1,12 @@
 body {
-    background: red;
-
-    @media (max-width: 430px) {
-
-        color: red;
-    }
+  background: white;
 }
 
 html {
-    font-size: 19px;
+  font-size: 19px;
+}
 
-    @media (max-width: 430px) {
-        color: red;
-    }
+.dsg {
+  font-style: italic;
+  position: relative;
 }

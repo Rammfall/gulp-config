@@ -1,15 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="./styles/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./styles/main.css">
 </head>
 <body>
-    <div>asda da asd s  фывd ыф1231231232 фыв фыв фыфыв фы в</div>
-    <div id="root"></div>
-    <script src="./js/main.js"></script>
+<div class="RForm-0" id="root"></div>
+<script src="https://script.umarkets.com/UniversalScript-1.1.4.3.min.js"></script>
+<script src="./js/main.js"></script>
+<script>
+
+  var basicSettings = {
+      api: "umarketsInfo",
+      lang: "RU",
+      badClasses: ["uk-form-danger"],
+      cookiesFlag: true,
+      redirectPage: "../ThankYouRedir/ThankYouRedir.htm?",
+      buttonsSettings: [{name: 'Получить', color: '#51a2b0'}]
+    },
+    termsConditionsParams = {
+      isTurnOn: true,
+      labelText: 'Заполняя форму регистрации, я принимаю ',
+      link: [{
+        linkName: 'https://www.umarkets.com/ru/privacy-policy',
+        linkText: 'условия обработки персональных данных.'
+      }],
+      isLink: true,
+      isSwitcher: false
+    },
+    secondStepParams = {
+      isTurnOn: false
+    },
+    fullRegistrationParams = {
+      isTurnOn: false
+    },
+    us;
+  document.addEventListener('DOMContentLoaded', function () {
+    us = new UniversalScript(basicSettings, termsConditionsParams, secondStepParams, fullRegistrationParams);
+  }, false);
+</script>
 </body>
 </html>

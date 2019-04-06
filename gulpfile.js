@@ -99,7 +99,7 @@ function CSS() {
 //LINTER IS DEVELOP
 
 function linter() {
-  return src(path.css.watcher)
+  return src(path.css.src)
     .pipe(postcss(linter('./stylelint.config.js')));
 }
 
@@ -125,6 +125,12 @@ function JS() {
           }
         ]
       },
+      plugins: [
+        new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery'
+        })
+      ],
       optimization: {
         minimizer: [
             new UglifyJsPlugin({
@@ -196,3 +202,4 @@ let dev = development ? series(beforeServer, parallel(browserSync, watchers)) : 
 //exports['name task for call in cli'] = nameFunctionTask
 
 exports.default = dev;
+exports.lint = linter;
