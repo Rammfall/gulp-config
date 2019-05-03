@@ -13,6 +13,8 @@ const title = document.querySelector('.title');
 const subTitle = document.querySelector('.subtitle');
 const dragBtn = document.querySelector('.drag-btn');
 const tips = document.querySelector('.tips');
+const negativeBtn = document.querySelector('.negative-btn');
+const positiveBtn = document.querySelector('.positive-btn');
 
 
 let active = false;
@@ -137,7 +139,8 @@ class Money {
             title.classList.remove('visibile');
             subTitle.classList.remove('visibile');
             tips.classList.add('hidden');
-
+            positiveBtn.classList.remove('hidden');
+            negativeBtn.classList.remove('hidden');
           }
         }
       }
