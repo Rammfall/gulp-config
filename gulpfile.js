@@ -2,7 +2,9 @@ const autoprefixer = require('autoprefixer');
 const browser = require('browser-sync');
 const cssnano = require('cssnano');
 const del = require('del');
-const {src, dest, watch, parallel, series} = require('gulp');
+const {
+  src, dest, watch, parallel, series,
+} = require('gulp');
 const html = require('gulp-htmlmin');
 const image = require('gulp-image');
 const mmq = require('gulp-merge-media-queries');
@@ -39,53 +41,52 @@ const directories = {
   js: 'js/',
   fonts: 'fonts/',
   images: 'images/',
-  icons: 'icons/'
+  icons: 'icons/',
 };
 
 //  PATH TO FILES
 const path = {
   css: {
-    src: directories.src + directories.css + 'main.' + syntax,
-    watcher: directories.src + directories.css + '**/*.' + syntax,
-    dev: directories.dev + directories.css + '',
-    public: directories.public + directories.css + ''
+    src: `${directories.src + directories.css}main.${syntax}`,
+    watcher: `${directories.src + directories.css}**/*.${syntax}`,
+    dev: `${directories.dev + directories.css}`,
+    public: `${directories.public + directories.css}`,
   },
   images: {
-    src: directories.src + directories.images + '**/*.*',
-    dev: directories.dev + directories.images + '',
-    public: directories.public + directories.images + ''
+    src: `${directories.src + directories.images}**/*.*`,
+    dev: `${directories.dev + directories.images}`,
+    public: `${directories.public + directories.images}`,
   },
   svg: {
-    src: directories.src + directories.icons + '**/*.svg',
-    dev: directories.dev + directories.icons + '',
-    public: directories.public + directories.icons + ''
+    src: `${directories.src + directories.icons}**/*.svg`,
+    dev: `${directories.dev + directories.icons}`,
+    public: `${directories.public + directories.icons}`,
   },
   js: {
-    watcher: directories.src + directories.js + '**/*.js',
-    src: directories.src + directories.js + 'main.js',
-    dev: directories.dev + directories.js + '',
-    public: directories.public + directories.js + ''
+    watcher: `${directories.src + directories.js}**/*.js`,
+    src: `${directories.src + directories.js}main.js`,
+    dev: `${directories.dev + directories.js}`,
+    public: `${directories.public + directories.js}`,
   },
   fonts: {
-    src: directories.src + directories.fonts + '**/*.*',
-    dev: directories.dev + directories.fonts + '',
-    public: directories.public + directories.fonts + ''
+    src: `${directories.src + directories.fonts}**/*.*`,
+    dev: `${directories.dev + directories.fonts}`,
+    public: `${directories.public + directories.fonts}`,
   },
   html: {
-    src: directories.src + '*.html',
+    src: `${directories.src}*.html`,
     dev: directories.dev,
-    public: directories.public
-  }
+    public: directories.public,
+  },
 };
 
 //  CSS TASK
 
 function CSS() {
-
-  let preprocessors = {
+  const preprocessors = {
     sass: sass().on('error', sass.logError),
     scss: sass().on('error', sass.logError),
-    less: less()
+    less: less(),
   };
 
   return src(path.css.src)
@@ -95,7 +96,7 @@ function CSS() {
     .pipe(gulpif(development, postcss([autoprefixer]), postcss([autoprefixer, cssnano])))
     .pipe(gulpif(development, sourceMap.write()))
     .pipe(gulpif(development, dest(path.css.dev), dest(path.css.public)))
-    .pipe(gulpif(development, browser.stream()))
+    .pipe(gulpif(development, browser.stream()));
 }
 
 //  JS TASK
@@ -104,7 +105,7 @@ function JS() {
   return src(path.js.src)
     .pipe(webpackStream({
       output: {
-        path: development ? __dirname + directories.dev + 'js/' : __dirname + directories.public + 'js/',
+        path: development ? `${__dirname + directories.dev}js/` : `${__dirname + directories.public}js/`,
         filename: 'main.js',
       },
       devtool: development ? 'source-map' : '',
@@ -115,28 +116,22 @@ function JS() {
             exclude: /(node_modules)/,
             loader: 'babel-loader',
             query: {
-              presets: ['@babel/env']
-            }
-          }
-        ]
+              presets: ['@babel/env'],
+            },
+          },
+        ],
       },
-      plugins: [
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery'
-        })
-      ],
       optimization: {
         minimizer: [
           new UglifyJsPlugin({
             test: /\.js(\?.*)?$/i,
             sourceMap: true,
-            extractComments: true
-          })
+            extractComments: true,
+          }),
         ],
       },
     }))
-    .pipe(gulpif(development, dest(path.js.dev), dest(path.js.public)))
+    .pipe(gulpif(development, dest(path.js.dev), dest(path.js.public)));
 }
 
 //  OPTIMIZE IMAGE TASK
@@ -144,7 +139,7 @@ function JS() {
 function optimizeImages() {
   return src(path.images.src)
     .pipe(gulpif(!development, image()))
-    .pipe(gulpif(development, dest(path.images.dev), dest(path.images.public)))
+    .pipe(gulpif(development, dest(path.images.dev), dest(path.images.public)));
 }
 
 //  OPTIMIZE ICONS
@@ -166,7 +161,7 @@ function font() {
 
 function htmlMin() {
   return src(path.html.src)
-    .pipe(gulpif(!development, html({collapseWhitespace: true})))
+    .pipe(gulpif(!development, html({ collapseWhitespace: true })))
     .pipe(gulpif(development, dest(path.html.dev), dest(path.html.public)));
 }
 
@@ -184,7 +179,7 @@ function watchers() {
 
 function browserSync() {
   browser.init({
-    server: directories.dev
+    server: directories.dev,
   });
 
   watch(path.html.src).on('change', browser.reload);

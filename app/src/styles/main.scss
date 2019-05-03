@@ -1,12 +1,267 @@
+@import "reset";
+
+html, body, .main-wrapper {
+  height: 100%;
+}
+
 body {
-  background: white;
+  background: #e3405f;
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
 }
-
-html {
-  font-size: 19px;
+.content-wrapeer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  opacity: 1;
 }
-
-.dsg {
-  font-style: italic;
+.logo {
   position: relative;
+  top: 50%;
+  opacity: 1;
+  transition: all 2s;
+}
+.money {
+  position: absolute;
+  height: 159px;
+  width: 290px;
+  background: url("../images/money2.png");
+  animation: money-down 6s linear forwards;
+}
+
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.title {
+  opacity: 1;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 60px;
+  line-height: 150%; /* or 90px */
+  text-align: center;
+  color: #fff;
+  transition: 1s;
+}
+.subtitle {
+  opacity: 1;
+  transition: 1s;
+}
+.subtitle,
+.tips {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 35px;
+  line-height: 150%; /* identical to box height, or 52px */
+  text-align: center;
+  color: #fff;
+}
+
+.interactive-block {
+  width: 50%;
+}
+
+
+
+.student {
+  position: relative;
+  height: 650px;
+  width: 627px;
+  background: url(../images/handicon.png) no-repeat, url(../images/student1.png) no-repeat;
+  background-position: 73% 128%, center;
+  &.happy {
+    background: url(../images/student4.png) no-repeat;
+  }
+}
+
+
+.student-hand {
+  position: absolute;
+  top: 388px;
+  left: 139px;
+  height: 121px;
+  width: 228px;
+
+}
+.money-in-hand1 {
+  user-select: none;
+  position: absolute;
+  top: -40px;
+  left: -50px;
+}
+.money-in-hand2 {
+  user-select: none;
+  position: absolute;
+  top: -84px;
+  left: -50px;
+}
+.money-in-hand3 {
+  user-select: none;
+  position: absolute;
+  top: -125px;
+  left: -50px;
+}
+
+
+.progress {
+  position: relative;
+  height: 8px;
+  display: block;
+  width: 35%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  background-clip: padding-box;
+  margin: 0.5rem 0 1rem 0;
+  overflow: hidden;
+}
+
+.progress .determinate {
+  position: absolute;
+  background-color: inherit;
+  top: 0;
+  bottom: 0;
+  background-color: #fff;
+  transition: width .3s linear;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+.visibile {
+  opacity: 0;
+}
+
+@-webkit-keyframes indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+
+.positive-btn {
+  background-color: #FFED4A;
+  border: none;
+  border-radius: 100px;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+  color: #000000;
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 0.2em;
+  line-height: 150%;
+  margin: auto;
+  padding: 25px 0;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  width: 395px;
+
+  &:hover {
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.negative-btn {
+  background-color: transparent;
+  border: 1px solid;
+  border-radius: 100px;
+  color: #FFFFFF;
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: normal;
+  font-size: 20px;
+  letter-spacing: 0.2em;
+  line-height: 150%;
+  margin: auto;
+  padding: 25px 0;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  width: 395px;
+
+  &:hover {
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@keyframes indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@-webkit-keyframes indeterminate-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+@keyframes indeterminate-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+.logo-to-top {
+  animation: logo-to-top 2s linear forwards;
+}
+
+@keyframes money-down {
+  0% {
+    transform: translateY(-100px);
+  }
+  100% {
+    transform: translateY(4000px);
+  }
+}
+
+@keyframes logo-to-top {
+  0% {
+    top: 50%;
+  }
+  100% {
+    top: 0%;
+  }
 }
