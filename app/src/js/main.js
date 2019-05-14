@@ -16,7 +16,6 @@ const tips = document.querySelector('.tips');
 const negativeBtn = document.querySelector('.negative-btn');
 const positiveBtn = document.querySelector('.positive-btn');
 
-
 let active = false;
 let currentX;
 let currentY;
@@ -31,20 +30,22 @@ let moneyGetRectUpdate;
 let moneyX;
 let moneyY;
 let progressBar = 0;
-let { width: interactiveBlockWidth, left: interactiveBlockLeft } = interactiveBlock.getBoundingClientRect();
+let {
+  width: interactiveBlockWidth,
+  left: interactiveBlockLeft
+} = interactiveBlock.getBoundingClientRect();
 let { width: studentWidth } = dragItem.getBoundingClientRect();
 
+container.addEventListener('touchstart', dragStart, false);
+container.addEventListener('touchend', dragEnd, false);
+mainWrapper.addEventListener('touchmove', drag, false);
 
-container.addEventListener("touchstart", dragStart, false);
-container.addEventListener("touchend", dragEnd, false);
-mainWrapper.addEventListener("touchmove", drag, false);
-
-container.addEventListener("mousedown", dragStart, false);
-container.addEventListener("mouseup", dragEnd, false);
-mainWrapper.addEventListener("mousemove", drag, false);
+container.addEventListener('mousedown', dragStart, false);
+container.addEventListener('mouseup', dragEnd, false);
+mainWrapper.addEventListener('mousemove', drag, false);
 
 function dragStart(e) {
-  if (e.type === "touchstart") {
+  if (e.type === 'touchstart') {
     initialX = e.touches[0].clientX - xOffset;
     initialY = e.touches[0].clientY - yOffset;
   } else {
@@ -66,10 +67,9 @@ function dragEnd(e) {
 
 function drag(e) {
   if (active) {
-
     e.preventDefault();
 
-    if (e.type === "touchmove") {
+    if (e.type === 'touchmove') {
       currentX = e.touches[0].clientX - initialX;
       currentY = e.touches[0].clientY - initialY;
     } else {
@@ -81,14 +81,20 @@ function drag(e) {
     yOffset = currentY;
     // console.log("currentX ---> ", currentX);
     // console.log("currentY ---> ", currentY);
-    if(!(currentX < 0 - studentWidth / 2 || currentX > (interactiveBlockWidth - interactiveBlockLeft) + studentWidth / 2)) {
+    if (
+      !(
+        currentX < 0 - studentWidth / 2 ||
+        currentX >
+          interactiveBlockWidth - interactiveBlockLeft + studentWidth / 2
+      )
+    ) {
       setTranslate(currentX, currentY, dragItem);
     }
   }
 }
 
 function setTranslate(xPos, yPos, el) {
-  el.style.transform = "translate3d(" + xPos + "px, " + "0px, 0)";
+  el.style.transform = 'translate3d(' + xPos + 'px, ' + '0px, 0)';
 }
 
 class Money {
@@ -101,29 +107,33 @@ class Money {
     mainWrapper.append(moneyEl);
     moneyEl.classList.add('money');
     this.moneyCash.push(moneyEl);
-  }
+  };
   deleteFirstMoneyEl = () => {
     this.moneyCash[0].remove();
     this.moneyCash.shift();
-  }
+  };
   checker = () => {
-    this.moneyCash.forEach((item) => {
+    this.moneyCash.forEach(item => {
       const { left, top, width, height } = item.getBoundingClientRect();
-      const { left: handLeft, top: handTop, width: handWidth, height: handHeight } = handXY.getBoundingClientRect();
+      const {
+        left: handLeft,
+        top: handTop,
+        width: handWidth,
+        height: handHeight
+      } = handXY.getBoundingClientRect();
 
       const right = left + width;
       const bottom = top + height;
 
       const handRight = handLeft + handWidth;
       const handBottom = handTop + handHeight;
-      if(bottom >= handTop && top <= handBottom) {
-
-        if(right >= handLeft && left <= handRight) {
+      if (bottom >= handTop && top <= handBottom) {
+        if (right >= handLeft && left <= handRight) {
           console.log('BINGO');
           item.remove();
           progressBar += 33.3;
           determinate.setAttribute('style', `width: ${progressBar}%`);
-          if(progressBar > 30) {
+          if (progressBar > 30) {
             moneyInHand1.classList.remove('hidden');
           }
           if (progressBar > 60) {
@@ -135,6 +145,7 @@ class Money {
             moneyInHand3.classList.remove('hidden');
 
             title.innerText = 'Запишись на курс';
+
             subTitle.innerText = 'Кращі студенти стануть тім-лідерами!';
             title.classList.remove('visibile');
             subTitle.classList.remove('visibile');
@@ -145,7 +156,7 @@ class Money {
         }
       }
     });
-  }
+  };
 }
 
 function stopAllInterval() {
@@ -157,7 +168,7 @@ function stopAllInterval() {
 let money = new Money();
 
 function startMoneyDrop() {
-  contentWrapeer.removeEventListener("mousedown", startMoneyDrop, false);
+  contentWrapeer.removeEventListener('mousedown', startMoneyDrop, false);
   addMoneyInterval = setInterval(() => {
     money.addMoney();
   }, 2000);
@@ -167,15 +178,12 @@ moneyGetRectUpdate = setInterval(() => {
   money.checker();
 }, 16);
 
-
 // setTimeout(() => {
 //   delElInterval = setInterval(() => {
 //     money.deleteFirstMoneyEl();
 //     // console.log(money.moneyCash);
 //   }, 2000);
 // }, 10000);
-
-
 
 // let timerId = setInterval(function() {
 //   let money = document.createElement('div');
@@ -196,12 +204,12 @@ addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     contentWrapeer.classList.remove('hidden');
     // contentWrapeer.addEventListener("touchstart", startMoneyDrop, false);
-    contentWrapeer.addEventListener("mousedown", startMoneyDrop, false);
+    contentWrapeer.addEventListener('mousedown', startMoneyDrop, false);
   }, 5500);
 
   setTimeout(() => {
-      title.classList.add('visibile');
-      subTitle.classList.add('visibile');
-      // dragBtn.classList.remove('hidden');
+    title.classList.add('visibile');
+    subTitle.classList.add('visibile');
+    // dragBtn.classList.remove('hidden');
   }, 6500);
-})
+});

@@ -1,7 +1,18 @@
 {
   "syntax": "scss",
-  "extends": "stylelint-config-standard",
+  "plugins": [
+    "stylelint-scss",
+    "stylelint-prettier"
+  ],
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-sass-guidelines"
+  ],
   "rules": {
-
-  }
+    "prettier/prettier": true,
+    "declaration-colon-newline-after": "always-multi-line"
+  },
+  "ignoreFiles": [
+    "**/*.css"
+  ]
 }
