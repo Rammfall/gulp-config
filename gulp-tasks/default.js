@@ -13,7 +13,7 @@ const gulpif = require('gulp-if');
 // const less = require('gulp-less');
 const webp = require('gulp-webp');
 
-const { path, lpName, directories, syntax } = require('./gulp-tasks/pathes');
+const { path, lpName, directories, syntax } = require('./pathes');
 
 const development = !process.argv.includes('--prod');
 
