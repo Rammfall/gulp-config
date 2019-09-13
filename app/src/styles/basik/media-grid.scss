@@ -1,0 +1,28 @@
+$xxl-min: 1920px;
+$xl-max: 1919px;
+$xl-min: 1366px;
+$lg-max: 1365px;
+$lg-min: 1200px;
+$md-max: 1199px;
+$md-min: 800px;
+$sm-max: 799px;
+$sm-min: 576px;
+$xs-max: 575px;
+
+.container {
+  width: 100%;
+  padding: 0 15px;
+  margin: 0 auto;
+
+  @media (min-width: $lg-min) {
+    max-width: 1200px;
+  }
+
+  @media (min-width: $md-min) {
+    max-width: 800px;
+  }
+
+  @media (min-width: $sm-min) {
+    max-width: 520px;
+  }
+}

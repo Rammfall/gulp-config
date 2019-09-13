@@ -1,23 +1,12 @@
-const arr = [1, 2];
+import $ from 'jquery';
+import 'webp-in-css/polyfill';
 
-const bbb = [...arr];
+import FormValid from './validation/index';
 
-const obj = {
-  aaa: '1',
-  bbb: '2'
-};
+window.$ = $;
+window.jQuery = $;
 
-const objNew = {
-  aaa: 'new 1',
-  ccc: '3'
-};
-
-const lll = {
-  ...obj,
-  ...objNew
-};
-
-console.log(lll);
-
-console.log(bbb);
-console.log('tes s d t  sd sd sda a s da');
+document.addEventListener('DOMContentLoaded', () => {
+  const form = new FormValid();
+  form.init();
+});

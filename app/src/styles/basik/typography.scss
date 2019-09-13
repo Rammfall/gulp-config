@@ -1,0 +1,93 @@
+@import "media-grid";
+
+html {
+  height: 100%;
+}
+
+body {
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  height: 100%;
+  color: $title-color1;
+}
+
+input {
+  font-family: 'Montserrat', sans-serif;
+  padding: 15px 0;
+  background-color: transparent;
+  width: 100%;
+  display: inline-block;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.page-wrapper {
+  min-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-footer {
+  margin-top: auto;
+}
+
+.svg-wrapper {
+  svg {
+    display: block !important;
+  }
+}
+
+.overlay-wrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, .5);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s, visibility .3s;
+  -webkit-overflow-scrolling: touch;
+
+  &.show {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.stop-scroll {
+  overflow: hidden;
+  height: 100%;
+}
+
+._valid-form {
+  position: relative;
+
+  .form-group {
+    position: relative;
+
+    &:after {
+      content: attr(data-error);
+      @include fonts(12px, 1);
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -14px;
+      color: $bg-color1;
+      text-align: center;
+    }
+
+    &.success {
+      box-shadow: 0 0 10px -2px $title-color2;
+    }
+  }
+}
