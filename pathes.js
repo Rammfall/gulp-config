@@ -23,7 +23,8 @@ const path = {
     dev: `${directories.dev + directories.images}`,
     devWebP: `${directories.dev + directories.images}webp/`,
     public: `${directories.public + directories.images}`,
-    publicWebP: `${directories.public + directories.images}webp/`
+    publicWebP: `${directories.public + directories.images}webp/`,
+    watcher: `${directories.src + directories.images}**/*.*`
   },
   svg: {
     src: `${directories.src + directories.icons}**/*.svg`,
@@ -32,7 +33,7 @@ const path = {
   },
   js: {
     watcher: `${directories.src + directories.js}**/*.js`,
-    src: `${directories.src + directories.js}main.js`,
+    src: `${directories.src + directories.js}**/*.js`,
     dev: `${directories.dev + directories.js}`,
     public: `${directories.public + directories.js}`
   },

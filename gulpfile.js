@@ -108,6 +108,7 @@ function watchers() {
   watch(path.css.watcher, CSS);
   watch(path.html.src, htmlMin);
   watch(path.js.src, JS);
+  watch(path.images.watcher, optimizeImages);
 }
 
 function browserSync() {
