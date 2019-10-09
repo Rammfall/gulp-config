@@ -3,7 +3,7 @@ const syntax = 'scss';
 const directories = {
   src: './app/src/',
   dev: './app/dev/',
-  public: './app/public/',
+  public: `../../${lpName}/`,
   css: 'styles/',
   js: 'js/',
   fonts: 'fonts/',
@@ -33,7 +33,7 @@ const path = {
   },
   js: {
     watcher: `${directories.src + directories.js}**/*.js`,
-    src: `${directories.src + directories.js}**/*.js`,
+    src: `${directories.src + directories.js}main.js`,
     dev: `${directories.dev + directories.js}`,
     public: `${directories.public + directories.js}`
   },
