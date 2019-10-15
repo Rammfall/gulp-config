@@ -30,7 +30,7 @@
     font-display: swap;
     font-family: $fontName;
     src: url("../fonts/#{$fontName}/#{$fontWeight}/#{$fontName}-#{$fontWeight}.woff2") format('woff2'),
-    url("../fonts/#{$fontName}/#{$fontWeight}/Montserrat-#{$fontWeight}.woff") format('woff');
+         url("../fonts/#{$fontName}/#{$fontWeight}/#{$fontName}-#{$fontWeight}.woff") format('woff');
     font-weight: map-get($fontWeightArr, $fontWeight);
     font-style: $fontStyle;
   }

@@ -3,7 +3,7 @@ const syntax = 'scss';
 const directories = {
   src: './app/src/',
   dev: './app/dev/',
-  public: './app/public/',
+  public: `../../${lpName}/`,
   css: 'styles/',
   js: 'js/',
   fonts: 'fonts/',
@@ -23,7 +23,8 @@ const path = {
     dev: `${directories.dev + directories.images}`,
     devWebP: `${directories.dev + directories.images}webp/`,
     public: `${directories.public + directories.images}`,
-    publicWebP: `${directories.public + directories.images}webp/`
+    publicWebP: `${directories.public + directories.images}webp/`,
+    watcher: `${directories.src + directories.images}**/*.*`
   },
   svg: {
     src: `${directories.src + directories.icons}**/*.svg`,

@@ -7,9 +7,8 @@ html {
 body {
   font-size: 16px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
   height: 100%;
-  color: $title-color1;
+  color: #000000;
 }
 
 input {
@@ -82,12 +81,12 @@ input {
       left: 0;
       right: 0;
       top: -14px;
-      color: $bg-color1;
+      color: red;
       text-align: center;
     }
 
     &.success {
-      box-shadow: 0 0 10px -2px $title-color2;
+      box-shadow: 0 0 10px -2px #ffffff;
     }
   }
 }
