@@ -31,14 +31,8 @@ input {
   flex-direction: column;
 }
 
-.page-footer {
-  margin-top: auto;
-}
-
-.svg-wrapper {
-  svg {
-    display: block !important;
-  }
+.page-content {
+  flex: 1 0 auto;
 }
 
 .overlay-wrapper {
