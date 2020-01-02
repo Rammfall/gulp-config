@@ -55,5 +55,11 @@
     "webpack-cli": "^3.3.2",
     "webpack-stream": "^5.2.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "browserslist": [
+    "last 10 version",
+    "> 2%",
+    "not dead",
+    "IE 11"
+  ]
 }
