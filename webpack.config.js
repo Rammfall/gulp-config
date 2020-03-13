@@ -33,4 +33,5 @@ const webpackConfig = (devMode, directories) => {
   };
 };
 
+
 module.exports = webpackConfig;

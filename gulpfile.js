@@ -1,3 +1,5 @@
+
+const babe = require("@babel/register");
 const autoprefixer = require('autoprefixer');
 const webpackStream = require('webpack-stream');
 const browser = require('browser-sync');
@@ -13,14 +15,26 @@ const sourceMap = require('gulp-sourcemaps');
 const gulpif = require('gulp-if');
 // const less = require('gulp-less');
 const webp = require('gulp-webp');
-
+const gulp = require('gulp');
+const mocha = require('gulp-mocha');
 const webpackConfig = require('./webpack.config');
 const { path, lpName, directories, syntax } = require('./pathes');
 
 const development = !process.argv.includes('--prod');
-
+const srcPath = './app/src/**/*.js';
 // eslint-disable-next-line no-console
 console.log('development', development);
+
+function handleError(err) {
+  console.log(err.toString());
+  this.emit('end');
+}
+
+function test() {
+  return src(['tests/*.js'])
+    .pipe(mocha({ reporter: "spec", require: '@babel/register' })
+    .on("error", handleError));
+}
 
 // JS TASK
 function JS() {
@@ -108,6 +122,7 @@ function watchers() {
   watch(path.css.watcher, CSS);
   watch(path.html.src, htmlMin);
   watch(path.js.watcher, JS);
+  watch(path.js.watcher, test);
   watch(path.images.watcher, optimizeImages);
 }
 
@@ -128,4 +143,5 @@ const dev = development
 //  exports['name task for call in cli'] = nameFunctionTask
 
 exports.default = dev;
+exports.test = test;
 
