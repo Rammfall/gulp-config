@@ -9,7 +9,8 @@
     "lint:css": "stylelint ./**/*.scss --syntax scss --color --formatter verbose --fix",
     "lint:js": "eslint ./src --color --format stylish --fix",
     "test": "jest",
-    "test:watcher": "jest --watchAll"
+    "test:watcher": "jest --watchAll",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
