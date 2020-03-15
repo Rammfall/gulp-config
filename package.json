@@ -8,7 +8,8 @@
     "build": "gulp --prod",
     "lint:css": "stylelint ./**/*.scss --syntax scss --color --formatter verbose --fix",
     "lint:js": "eslint ./src --color --format stylish --fix",
-    "test": "./node_modules/.bin/mocha tests/**/*.js --require @babel/register"
+    "test": "jest",
+    "test:watcher": "jest --watchAll"
   },
   "repository": {
     "type": "git",
@@ -53,6 +54,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-webp": "^4.0.1",
     "husky": "^4.2.3",
+    "jest": "^25.1.0",
     "lint-staged": "^8.1.6",
     "prettier": "^1.17.0",
     "prettier-stylelint": "^0.4.2",

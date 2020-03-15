@@ -1,5 +1,7 @@
 import 'webp-in-css/polyfill';
 
-document.addEventListener('DOMContentLoaded', () => {
+export const reversArr = arr => arr.reverse();
 
+document.addEventListener('DOMContentLoaded', () => {
+  const reversedArr = reversArr([1,2,3]); 
 });
