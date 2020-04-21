@@ -8,7 +8,8 @@ const directories = {
   js: 'js/',
   fonts: 'fonts/',
   images: 'images/',
-  icons: 'icons/'
+  icons: 'icons/',
+  lib: 'lib/'
 };
 const path = {
   css: {
@@ -35,7 +36,10 @@ const path = {
     watcher: `${directories.src + directories.js}**/*.js`,
     src: `${directories.src + directories.js}main.js`,
     dev: `${directories.dev + directories.js}`,
-    public: `${directories.public + directories.js}`
+    public: `${directories.public + directories.js}`,
+    srcLib: `${directories.src + directories.js + directories.lib}**/*.*`,
+    devLib: `${directories.dev + directories.js + directories.lib}`,
+    publicLib: `${directories.public + directories.js + directories.lib}`,
   },
   fonts: {
     src: `${directories.src + directories.fonts}**/*.*`,

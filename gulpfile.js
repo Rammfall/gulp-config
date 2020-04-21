@@ -33,6 +33,10 @@ function JS() {
     .pipe(gulpif(development, dest(path.js.dev), dest(path.js.public)))
 }
 
+function moveLibFolder() {
+  return src(path.js.srcLib)
+    .pipe(gulpif(development, dest(path.js.devLib), dest(path.js.publicLib)))
+}
 
 //  CSS TASK
 
@@ -120,7 +124,7 @@ function browserSync() {
   watch(path.js.watcher).on('change', browser.reload);
 }
 
-const beforeServer = parallel(htmlMin, JS, CSS, optimizeImages, font);
+const beforeServer = parallel(htmlMin, JS, moveLibFolder, CSS, optimizeImages, font);
 const dev = development
   ? series(beforeServer, parallel(browserSync, watchers))
   : series(clean, beforeServer);
